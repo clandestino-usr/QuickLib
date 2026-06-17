@@ -1,0 +1,16 @@
+{
+  "name": "quicklib",
+  "version": "1.0.0",
+  "description": "Minimal read-only Calibre library web browser",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-session": "^1.18.1"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

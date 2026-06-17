@@ -1,0 +1,519 @@
+/* ── Variables ── */
+:root {
+  --ql-cover-radius: 3px;
+  --ql-badge-radius: 3px;
+}
+
+body { margin: 0; }
+
+/* ── Header ── */
+header {
+  border-bottom: 1px solid var(--pico-card-border-color);
+  padding: 0.6rem 1.25rem;
+  position: sticky;
+  top: 0;
+  background: var(--pico-background-color);
+  z-index: 10;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.inline-form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.site-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: var(--pico-color);
+  white-space: nowrap;
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+#search-form {
+  flex: 1;
+  margin: 0;
+}
+
+button#button-logout {
+  padding: 0 8px;
+  margin-bottom: 0;
+}
+
+/* Fix: use logical properties so Pico's search icon padding-inline-start is preserved */
+#search-form input[type="search"] {
+  margin: 0;
+  padding-block: 0.4rem;
+  padding-inline-end: 0.75rem;
+  height: auto;
+}
+
+/* ── Main container ── */
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2rem;
+}
+
+/* ── Controls bar ── */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.result-count {
+  color: var(--pico-muted-color);
+  font-size: 0.875rem;
+}
+
+#controls-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+#controls-form select {
+  margin: 0;
+  padding-block: 0.35rem;
+  padding-inline-start: 0.6rem;
+  height: auto;
+  font-size: 0.875rem;
+  width: auto;
+}
+
+/* ── View toggle + icon buttons ── */
+.view-btn,
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-height: unset;
+  margin-bottom: 0;
+  border-radius: 4px;
+  border: 1px solid var(--pico-card-border-color);
+  color: var(--pico-muted-color);
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.view-btn:hover,
+.icon-btn:hover {
+  border-color: var(--pico-primary);
+  color: var(--pico-primary);
+}
+
+/* Override Pico vertical-align on <a> elements */
+.view-btn {
+  vertical-align: middle;
+}
+
+.view-btn.active {
+  background: var(--pico-primary);
+  border-color: var(--pico-primary);
+  color: #fff;
+}
+
+/* ── Format badges ── */
+.badge {
+  display: inline-block;
+  padding: 0.12rem 0.35rem;
+  border-radius: var(--ql-badge-radius);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.badge:hover { opacity: 0.85; }
+
+.fmt-epub  { background: #2d6a4f; color: #fff; }
+.fmt-pdf   { background: #9b2335; color: #fff; }
+.fmt-mobi  { background: #1565c0; color: #fff; }
+.fmt-azw   { background: #6a1b9a; color: #fff; }
+.fmt-cbz,
+.fmt-cbr   { background: #e65100; color: #fff; }
+.fmt-other { background: #546e7a; color: #fff; }
+
+/* ── Cover placeholder ── */
+.cover-wrap.no-cover,
+.list-cover-cell.no-cover {
+  position: relative;
+}
+
+.cover-wrap.no-cover::after,
+.list-cover-cell.no-cover::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url('/placeholder.svg');
+  background-size: 50% auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.35;
+  position: absolute;
+  inset: 0;
+}
+
+/* ── Clickable book elements ── */
+[data-book-id] {
+  cursor: pointer;
+}
+
+.author-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.author-link:hover {
+  text-decoration: underline;
+  color: var(--pico-primary);
+}
+
+/* ── Grid view ── */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 1rem;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--pico-card-border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--pico-card-background-color);
+  transition: box-shadow 0.15s;
+}
+
+.book-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.cover-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--pico-card-border-color);
+}
+
+.cover-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.book-info {
+  padding: 0.55rem 0.6rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.2rem;
+}
+
+.book-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.book-title:hover { text-decoration: underline; }
+
+.book-authors {
+  font-size: 0.75rem;
+  color: var(--pico-muted-color);
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.formats {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+/* Grid badges: contiguous button group, smaller text */
+.book-grid .badge {
+  font-size: 0.58rem;
+  padding: 0.1rem 0.28rem;
+  border-radius: 0;
+}
+
+.book-grid .formats .badge:first-child { border-radius: var(--ql-badge-radius) 0 0 var(--ql-badge-radius); }
+.book-grid .formats .badge:last-child  { border-radius: 0 var(--ql-badge-radius) var(--ql-badge-radius) 0; }
+.book-grid .formats .badge:only-child  { border-radius: var(--ql-badge-radius); }
+
+/* ── List view ── */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.book-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.book-list thead th {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pico-muted-color);
+  border-bottom: 2px solid var(--pico-card-border-color);
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+}
+
+.book-list tbody tr {
+  border-bottom: 1px solid var(--pico-card-border-color);
+  transition: background 0.1s;
+}
+
+.book-list tbody tr:hover {
+  background: var(--pico-card-sectioning-background-color);
+}
+
+.book-list td {
+  padding: 0.45rem 0.75rem;
+  vertical-align: middle;
+}
+
+.list-cover-cell {
+  width: 46px;
+  min-width: 46px;
+  padding: 0.3rem 0.5rem !important;
+  background: var(--pico-card-border-color);
+}
+
+.list-cover {
+  display: block;
+  width: 38px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: var(--ql-cover-radius);
+}
+
+.list-title span:hover { text-decoration: underline; }
+.list-title { font-weight: 500; }
+.list-authors { color: var(--pico-muted-color); white-space: nowrap; }
+.list-formats { text-align: right; white-space: nowrap; }
+.list-formats .badge { padding: 0.18rem 0.5rem; margin-left: 0.2rem; }
+
+/* ── Pagination ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin: 2rem 0 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination-top {
+  margin: 0 0 1.25rem;
+}
+
+.pg-per-page-form {
+  margin: 0;
+  display: flex;
+}
+
+.pg-per-page {
+  height: 34px;
+  padding-block: 0;
+  padding-inline-start: 0.5rem;
+  font-size: 0.8rem;
+  width: auto;
+  margin: 0;
+}
+
+.pg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--pico-card-border-color);
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--pico-color);
+  line-height: 1;
+}
+
+a.pg-btn:hover {
+  border-color: var(--pico-primary);
+  color: var(--pico-primary);
+}
+
+.pg-btn.current {
+  background: var(--pico-primary);
+  border-color: var(--pico-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.pg-btn.disabled { opacity: 0.3; cursor: default; }
+.pg-btn.ellipsis { border-color: transparent; }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--pico-muted-color);
+}
+
+/* ── Book detail modal ── */
+#book-modal article {
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-body {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.modal-cover {
+  width: 130px;
+  height: 195px;
+  object-fit: cover;
+  border-radius: var(--ql-cover-radius);
+  flex-shrink: 0;
+}
+
+.modal-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  align-content: start;
+  margin: 0;
+  flex: 1;
+}
+
+.modal-meta dt {
+  font-weight: 600;
+  color: var(--pico-muted-color);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.modal-meta dd {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.modal-description {
+  border-top: 1px solid var(--pico-card-border-color);
+  padding-top: 1rem;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Normalize HTML from Calibre inside description */
+.modal-description p  { margin-bottom: 0.5em; }
+.modal-description br { line-height: 2; }
+
+.modal-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--pico-card-border-color);
+}
+
+.modal-dl-btn {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dl-size {
+  font-weight: 400;
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+.modal-loading {
+  text-align: center;
+  color: var(--pico-muted-color);
+  padding: 2rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .list-authors { display: none; }
+
+  .modal-body {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modal-meta {
+    width: 100%;
+  }
+}

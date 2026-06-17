@@ -1,0 +1,15 @@
+services:
+  quicklib:
+    build: .
+    ports:
+      - "9095:9095"
+    volumes:
+      - "${CALIBRE_LIBRARY_PATH}:/library:ro"
+      - "${QUICKLIB_CONFIG_DIR:-./config}:/config:ro"
+    environment:
+      CALIBRE_LIBRARY_PATH: /library
+      PORT: 9095
+      AUTH_USERS_FILE: /config/users
+      SESSION_SECRET: ${SESSION_SECRET}
+      SESSION_MAX_AGE_DAYS: ${SESSION_MAX_AGE_DAYS:-30}
+    restart: unless-stopped
