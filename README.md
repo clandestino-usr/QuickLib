@@ -42,9 +42,9 @@ Open `http://localhost:9095`.
 Create a `.env` file next to `docker-compose.yml`:
 
 ```env
-CALIBRE_LIBRARY_PATH=/mnt/your/calibre/library
-QUICKLIB_CONFIG_DIR=/path/to/config/dir
-SESSION_SECRET=replace_with_a_long_random_string
+CALIBRE_LIBRARY_PATH=/path/to/your/calibre/library
+QUICKLIB_CONFIG_DIR=/path/to/your/quicklib/config/folder
+SESSION_SECRET=a_very_long_string_of_random_characters
 SESSION_MAX_AGE_DAYS=30
 ```
 
