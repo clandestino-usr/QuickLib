@@ -1,6 +1,6 @@
 # QuickLib
 
-A lightweight, read-only web browser for [Calibre](https://calibre-ebook.com/) libraries. Built with Node.js, Express 5, and the built-in `node:sqlite` module — no external database driver needed. The project originated from a frustration when using either overengineered solutions like Calibre-Web or Grimmory, or unstable ones like BicBucStriim, and also from the desire to have a drop-dead-simple solution to browse, search and download books from a personal library from anywhere in the world. Claude Code and DeepSeek-V4 (through Pi-Dev) were involved in the process.
+A lightweight, read-only web browser for [Calibre](https://calibre-ebook.com/) libraries. Built with Node.js, Express 5, and the built-in `node:sqlite` module — no external database driver needed. The project originated from a frustration when using either overengineered solutions like Calibre-Web or Grimmory, or unstable ones like BicBucStriim, and also from the desire to have a drop-dead-simple solution to browse, search and download books from a personal library from anywhere in the world. AI was involved in the process.
 
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D24-brightgreen) ![Express](https://img.shields.io/badge/Express-5-blue) ![Docker](https://img.shields.io/badge/Docker-ready-blue)
 
@@ -91,6 +91,10 @@ docker compose up -d --build
 - **[node:sqlite](https://nodejs.org/api/sqlite.html)** — built-in SQLite driver (Node ≥ 24)
 - **[express-session](https://github.com/expressjs/session)** — session management
 - **[PicoCSS v2](https://picocss.com/)** — classless CSS framework (CDN)
+
+## AI assistance disclosure
+
+AI code assistants Claude and DeepSeek-V4-Pro wer involved in this project at various stages of planning, writting, reviewing, refactoring, testing or documenting. All AI-generated or AI-assisted changes are reviewed, tested, and accepted by the human maintainer before being committed. Responsibility for the final code remains with the repository maintainer.
 
 ## License
 
