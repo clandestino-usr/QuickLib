@@ -109,6 +109,178 @@ main {
   width: auto;
 }
 
+/* ── Tags dropdown ── */
+.tags-dropdown-wrapper {
+  position: relative;
+}
+
+.tags-dropdown-btn {
+  margin: 0;
+  padding-block: 0.35rem;
+  padding-inline-start: 0.6rem;
+  padding-inline-end: 2rem;
+  height: auto;
+  font-size: 0.875rem;
+  width: auto;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  position: relative;
+  border: var(--pico-border-width) solid var(--pico-form-element-border-color);
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-form-element-background-color);
+  color: var(--pico-form-element-color);
+}
+
+.tags-dropdown-btn::after {
+  content: '';
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translateY(-25%);
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid var(--pico-muted-color);
+  border-bottom: 1.5px solid var(--pico-muted-color);
+  rotate: 45deg;
+  pointer-events: none;
+}
+
+.tags-dropdown-btn:hover {
+  border-color: var(--pico-form-element-active-border-color);
+}
+
+.tags-count-badge {
+  background: var(--pico-primary);
+  color: #fff;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+.tags-count-badge:empty {
+  display: none;
+}
+
+.tags-dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+  z-index: 20;
+  background: var(--pico-card-background-color);
+  border: 1px solid var(--pico-card-border-color);
+  border-radius: 6px;
+  min-width: 240px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.tags-dropdown-panel[hidden] {
+  display: none;
+}
+
+.tags-filter-input {
+  border: none;
+  border-bottom: 1px solid var(--pico-card-border-color);
+  border-radius: 0;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.tags-list {
+  overflow-y: auto;
+  max-height: 280px;
+  padding: 0.25rem 0;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.tag-item:hover {
+  background: var(--pico-card-sectioning-background-color);
+}
+
+.tag-item input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.tag-item label {
+  margin: 0;
+  cursor: pointer;
+  flex: 1;
+}
+
+.tag-item .tag-count {
+  font-size: 0.75rem;
+  color: var(--pico-muted-color);
+  flex-shrink: 0;
+}
+
+.tags-list-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--pico-muted-color);
+  font-size: 0.85rem;
+}
+
+.tags-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--pico-card-border-color);
+}
+
+.tags-action-btn {
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  height: auto;
+  border-radius: var(--pico-border-radius);
+  cursor: pointer;
+}
+
+.tags-apply-btn {
+  margin-left: auto;
+  background: var(--pico-primary);
+  border: 1px solid var(--pico-primary);
+  color: #fff;
+}
+
+.tags-apply-btn:hover {
+  opacity: 0.85;
+}
+
+.tags-reset-btn {
+  background: transparent;
+  border: 1px solid var(--pico-card-border-color);
+  color: var(--pico-muted-color);
+}
+
+.tags-reset-btn:hover {
+  border-color: var(--pico-primary);
+  color: var(--pico-primary);
+}
+
 /* ── View toggle + icon buttons ── */
 .view-btn,
 .icon-btn {

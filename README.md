@@ -10,6 +10,7 @@ A lightweight, read-only web browser for [Calibre](https://calibre-ebook.com/) l
 - **5 sort options** — by date added, title A→Z / Z→A, author A→Z / Z→A
 - **Multi-word search** — searches both titles and descriptions simultaneously
 - **Author filter** — click any author name to filter the library by that author
+- **Tag filter** — dropdown with searchable checkboxes; supports multi-tag selection (AND logic); count badge reflects active filters
 - **Pagination** — configurable per-page count (10 / 25 / 50 / 100), duplicated at top and bottom with the selector integrated in the navigation bar
 - **Book detail popup** — cover, metadata (year, publisher, series, language, tags) and description in a modal
 - **File download** — direct download of any format (EPUB, PDF, MOBI, AZW, CBZ…) with file size shown

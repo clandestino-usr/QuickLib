@@ -33,16 +33,17 @@ const SORT_LABELS = {
   author_desc: 'Auteur Z→A',
 };
 
-function renderPage({ content, topPagination, bottomPagination, search, author, sort, perPage, view, total }) {
+function renderPage({ content, topPagination, bottomPagination, search, author, tags, sort, perPage, view, total }) {
   const q = esc(search);
   const a = esc(author || '');
+  const t = esc(tags || '');
 
   const sortOptions = Object.entries(SORT_LABELS).map(([val, label]) =>
     `<option value="${val}"${sort === val ? ' selected' : ''}>${label}</option>`
   ).join('');
 
-  const gridUrl = buildUrl({ q: search, author, sort, per_page: perPage, view: 'grid', page: 1 });
-  const listUrl = buildUrl({ q: search, author, sort, per_page: perPage, view: 'list', page: 1 });
+  const gridUrl = buildUrl({ q: search, author, tags, sort, per_page: perPage, view: 'grid', page: 1 });
+  const listUrl = buildUrl({ q: search, author, tags, sort, per_page: perPage, view: 'list', page: 1 });
 
   const logoutBtn = authEnabled ? `
       <form method="post" action="/logout" class="inline-form">
@@ -85,12 +86,26 @@ function renderPage({ content, topPagination, bottomPagination, search, author, 
       <form id="controls-form" method="get" action="/">
         <input type="hidden" name="q"        value="${q}">
         ${a ? `<input type="hidden" name="author" value="${a}">` : ''}
+        ${t ? `<input type="hidden" name="tags" value="${t}">` : ''}
         <input type="hidden" name="page"     value="1">
         <input type="hidden" name="view"     value="${esc(view)}">
         <input type="hidden" name="per_page" value="${perPage}">
         <select name="sort" aria-label="Tri">
           ${sortOptions}
         </select>
+        <div class="tags-dropdown-wrapper">
+          <button id="tags-dropdown-btn" class="tags-dropdown-btn" type="button" aria-haspopup="listbox">
+            Tags<span id="tags-count-badge" class="tags-count-badge"></span>
+          </button>
+          <div id="tags-dropdown" class="tags-dropdown-panel" hidden>
+            <input type="text" id="tags-filter" class="tags-filter-input" placeholder="Filtrer les tags…" autocomplete="off">
+            <div id="tags-list" class="tags-list"></div>
+            <div class="tags-actions">
+              <button id="tags-reset" type="button" class="tags-action-btn tags-reset-btn" hidden>Réinitialiser</button>
+              <button id="tags-apply" type="button" class="tags-action-btn tags-apply-btn">Appliquer</button>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
 

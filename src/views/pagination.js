@@ -1,10 +1,10 @@
 const { buildUrl, esc } = require('../utils');
 
-function renderPagination({ page, totalPages, perPage, sort, search, author, view, showPerPage = false, extraClass = '' }) {
+function renderPagination({ page, totalPages, perPage, sort, search, author, tags, view, showPerPage = false, extraClass = '' }) {
   if (totalPages <= 1) return '';
 
   function pgUrl(p) {
-    return buildUrl({ q: search, author, sort, per_page: perPage, view, page: p });
+    return buildUrl({ q: search, author, tags, sort, per_page: perPage, view, page: p });
   }
 
   function btn(p, label, disabled = false, current = false) {
@@ -30,6 +30,7 @@ function renderPagination({ page, totalPages, perPage, sort, search, author, vie
   const perPageSelect = showPerPage ? `<form id="per-page-form" method="get" action="/" class="pg-per-page-form">
     <input type="hidden" name="q"      value="${esc(search || '')}">
     ${author ? `<input type="hidden" name="author" value="${esc(author)}">` : ''}
+    ${tags ? `<input type="hidden" name="tags" value="${esc(tags)}">` : ''}
     <input type="hidden" name="sort"   value="${esc(sort)}">
     <input type="hidden" name="view"   value="${esc(view)}">
     <input type="hidden" name="page"   value="1">

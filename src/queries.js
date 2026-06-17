@@ -8,7 +8,7 @@ const SORT_MAP = {
   author_desc: 'b.author_sort DESC',
 };
 
-function buildWhere(search, author) {
+function buildWhere(search, author, tags) {
   const conds = [];
   const params = [];
 
@@ -27,12 +27,24 @@ function buildWhere(search, author) {
     params.push(author);
   }
 
+  if (tags && tags.length) {
+    const ph = tags.map(() => '?').join(',');
+    conds.push(`b.id IN (
+      SELECT btl.book FROM books_tags_link btl
+      JOIN tags t ON t.id = btl.tag
+      WHERE t.name IN (${ph})
+      GROUP BY btl.book
+      HAVING COUNT(DISTINCT t.id) = ?
+    )`);
+    params.push(...tags, tags.length);
+  }
+
   const clause = conds.length ? `WHERE ${conds.join(' AND ')}` : '';
   return { clause, params };
 }
 
-function getCount(search, author) {
-  const { clause, params } = buildWhere(search, author);
+function getCount(search, author, tags) {
+  const { clause, params } = buildWhere(search, author, tags);
   return db.prepare(`
     SELECT COUNT(DISTINCT b.id) AS total
     FROM books b
@@ -42,8 +54,8 @@ function getCount(search, author) {
 }
 
 // Authors and formats use subqueries to avoid DISTINCT + custom separator limitation
-function getBooks({ search, author, sort, limit, offset }) {
-  const { clause, params } = buildWhere(search, author);
+function getBooks({ search, author, tags, sort, limit, offset }) {
+  const { clause, params } = buildWhere(search, author, tags);
   const orderBy = SORT_MAP[sort] || SORT_MAP.recent;
   return db.prepare(`
     SELECT
@@ -103,4 +115,27 @@ function getBookDetail(id) {
   `).get(id);
 }
 
-module.exports = { getCount, getBooks, getBookPath, getBookFile, getBookDetail };
+function getTags(search, author) {
+  const { clause, params } = buildWhere(search, author);
+
+  const subset = db.prepare(`
+    SELECT t.name, COUNT(DISTINCT btl.book) AS count
+    FROM tags t
+    JOIN books_tags_link btl ON btl.tag = t.id
+    JOIN books b ON b.id = btl.book
+    LEFT JOIN comments c ON c.book = b.id
+    ${clause}
+    GROUP BY t.id
+    ORDER BY t.name COLLATE NOCASE
+  `).all(...params);
+
+  const all = db.prepare(`
+    SELECT t.name
+    FROM tags t
+    ORDER BY t.name COLLATE NOCASE
+  `).all();
+
+  return { subset, all };
+}
+
+module.exports = { getCount, getBooks, getBookPath, getBookFile, getBookDetail, getTags };

@@ -112,6 +112,184 @@
       });
     }
 
+    // ── Tags dropdown ────────────────────────────────────────────────────────
+
+    var tagsBtn     = document.getElementById('tags-dropdown-btn');
+    var tagsPanel   = document.getElementById('tags-dropdown');
+    var tagsFilter  = document.getElementById('tags-filter');
+    var tagsList    = document.getElementById('tags-list');
+    var tagsBadge   = document.getElementById('tags-count-badge');
+    var tagsApply   = document.getElementById('tags-apply');
+    var tagsReset   = document.getElementById('tags-reset');
+
+    if (tagsBtn && tagsPanel) {
+      var tagData    = null;
+      var selected   = {};
+      var fetchedFor = { q: null, author: null };
+
+      var curParams = new URLSearchParams(window.location.search);
+      var rawTags = curParams.get('tags') || '';
+      if (rawTags) {
+        rawTags.split(',').forEach(function (t) {
+          t = t.trim();
+          if (t) selected[t] = true;
+        });
+      }
+      updateBadge();
+
+      function updateBadge() {
+        var count = Object.keys(selected).length;
+        if (tagsBadge) tagsBadge.textContent = count || '';
+        if (tagsReset) tagsReset.hidden = count === 0;
+      }
+
+      function buildTagUrl() {
+        var names = Object.keys(selected);
+        if (!names.length) {
+          curParams.delete('tags');
+        } else {
+          curParams.set('tags', names.join(','));
+        }
+        curParams.set('page', '1');
+        return window.location.pathname + '?' + curParams.toString();
+      }
+
+      function openPanel() {
+        tagsPanel.hidden = false;
+        tagsFilter.value = '';
+        tagsFilter.focus();
+
+        var curQ      = curParams.get('q') || '';
+        var curAuthor = curParams.get('author') || '';
+
+        if (!tagData || fetchedFor.q !== curQ || fetchedFor.author !== curAuthor) {
+          tagsList.innerHTML = '<div class="tags-list-empty">Chargement…</div>';
+          fetch('/api/tags?q=' + encodeURIComponent(curQ) + '&author=' + encodeURIComponent(curAuthor))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              tagData = data;
+              fetchedFor = { q: curQ, author: curAuthor };
+              renderTags();
+            })
+            .catch(function () {
+              tagsList.innerHTML = '<div class="tags-list-empty">Erreur de chargement.</div>';
+            });
+        } else {
+          renderTags();
+        }
+      }
+
+      function closePanel() {
+        tagsPanel.hidden = true;
+      }
+
+      function renderTags() {
+        if (!tagData) return;
+        var filter = tagsFilter.value.trim().toLowerCase();
+
+        var subsetMap = {};
+        (tagData.subset || []).forEach(function (t) { subsetMap[t.name] = t.count; });
+
+        var seen = {};
+        var merged = [];
+        (tagData.subset || []).forEach(function (t) {
+          if (!seen[t.name]) { seen[t.name] = true; merged.push({ name: t.name, count: t.count, inSubset: true }); }
+        });
+        (tagData.all || []).forEach(function (t) {
+          if (!seen[t.name]) { seen[t.name] = true; merged.push({ name: t.name, count: 0, inSubset: false }); }
+        });
+
+        if (filter) {
+          merged = merged.filter(function (t) { return t.name.toLowerCase().indexOf(filter) !== -1; });
+        }
+
+        // Selected tags first, then alphabetical
+        merged.sort(function (a, b) {
+          var sa = selected[a.name] ? 0 : 1;
+          var sb = selected[b.name] ? 0 : 1;
+          if (sa !== sb) return sa - sb;
+          return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        });
+
+        if (!merged.length) {
+          tagsList.innerHTML = '<div class="tags-list-empty">Aucun tag.</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < merged.length; i++) {
+          var t   = merged[i];
+          var chk = selected[t.name] ? ' checked' : '';
+          var cnt = t.count ? ' <span class="tag-count">' + t.count + '</span>' : '';
+          html += '<div class="tag-item">' +
+            '<input type="checkbox" id="tag-' + i + '" value="' + escHTML(t.name) + '"' + chk + '>' +
+            '<label for="tag-' + i + '">' + escHTML(t.name) + '</label>' + cnt +
+          '</div>';
+        }
+        tagsList.innerHTML = html;
+
+        tagsList.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+          cb.addEventListener('change', function () {
+            if (this.checked) {
+              selected[this.value] = true;
+            } else {
+              delete selected[this.value];
+            }
+            updateBadge();
+          });
+        });
+      }
+
+      function escHTML(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // Toggle on button click
+      tagsBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (tagsPanel.hidden) {
+          openPanel();
+        } else {
+          closePanel();
+        }
+      });
+
+      // Filter input
+      tagsFilter.addEventListener('input', function () {
+        renderTags();
+      });
+
+      // Apply button
+      tagsApply.addEventListener('click', function () {
+        window.location.href = buildTagUrl();
+      });
+
+      // Reset button
+      tagsReset.addEventListener('click', function () {
+        selected = {};
+        updateBadge();
+        renderTags();
+      });
+
+      // Prevent panel clicks from bubbling
+      tagsPanel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      // Close on outside click
+      document.addEventListener('click', function () {
+        if (!tagsPanel.hidden) closePanel();
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !tagsPanel.hidden) {
+          closePanel();
+          tagsBtn.focus();
+        }
+      });
+    }
+
     // ── Book detail modal ─────────────────────────────────────────────────────
 
     var modal        = document.getElementById('book-modal');
