@@ -14,6 +14,16 @@ function renderLoginPage({ error } = {}) {
     h1   { text-align: center; margin-bottom: 1.5rem; font-size: 1.5rem; }
     .error { color: var(--pico-color-red-500); margin-bottom: 1rem; font-size: 0.9rem; }
   </style>
+  <script>
+    (function(){
+      var t = null;
+      try { t = localStorage.getItem('ql_theme'); } catch(_) {}
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 <body>
   <main>

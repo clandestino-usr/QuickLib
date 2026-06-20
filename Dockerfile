@@ -12,5 +12,8 @@ ENV NODE_NO_WARNINGS=1
 
 EXPOSE 9095
 
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:9095/health',r=>{process.exit(r.statusCode===200?0:1)})"
+
 USER node
 CMD ["node", "src/app.js"]

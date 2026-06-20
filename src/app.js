@@ -27,6 +27,11 @@ app.use(session({
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// Health check — must sit before auth middleware
+app.get('/health', (_req, res) => {
+  res.status(200).send('ok');
+});
+
 app.use('/', require('./routes/login'));
 
 const { requireAuth } = require('./auth');

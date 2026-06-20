@@ -11,6 +11,9 @@
   var savedTheme = lsGet('ql_theme');
   if (savedTheme === 'light' || savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', savedTheme);
+  } else {
+    document.documentElement.setAttribute('data-theme',
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   }
 
   // ── Preference persistence (redirect on fresh visit) ────────────────────────
